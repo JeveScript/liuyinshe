@@ -29,6 +29,19 @@ class basicModel {
   sortAll () {
     return knex(this.table).whereNull('isdeleted').select();
   }
+
+  count(params) {
+    return knex(this.table).where(params).count('id as total');
+  }
+
+  pagination (pageSize = 20, currentPage = 1,params={}) {
+    let offset = (currentPage - 1) * pageSize;
+    return knex(this.table)
+      .where(params)
+      .offset(offset)
+      .limit(pageSize)
+      .select()
+  }
 }
 
 module.exports = basicModel;

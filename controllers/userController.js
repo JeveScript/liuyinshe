@@ -30,7 +30,7 @@ const userController = {
         res.json({code:0,messsage: '服务器错误'});
       }
   },
-  update:async function(req, res, next) {
+  update: async function(req, res, next) {
     let id = req.params.id;
     let name = req.body.name;
     let phone = req.body.phone;
@@ -53,11 +53,27 @@ const userController = {
       res.json({code:0,messsage: '服务器错误'});
     }
   },
-  index:async function(req, res, next ) {
+  index: async function(req, res, next ) {
+    let name = req.query.name;
+    let phone = req.query.phone;
+    let pageSize = req.query.page_size || 20;
+    let currentPage = req.query.current_page || 1;
+    let params = {};
+    if(name) params.name = name;
+    if(phone) params.phone = phone;
 
     try {
-      let manages = await userModel.all();
-      res.json({code: 200, messsage: '获取成功', data: manages})
+      let users = await userModel
+        .pagination(pageSize, currentPage, params)
+        .orderBy('id', 'desc');
+      let usersCount = await userModel.count(params);
+      let total = usersCount[0].total;
+      res.json({code: 200, messsage: '获取成功', data: {
+        total: total,
+        current_page: currentPage,
+        page_size: pageSize,
+        data: users,
+      }})
     } catch (err) {
       res.json({code:0,messsage: '服务器错误'});
     }
