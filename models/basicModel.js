@@ -6,6 +6,10 @@ class basicModel {
     this.table = props;
   }
 
+  knex() {
+    return knex(this.table)
+  }
+
   all() {
     return knex(this.table).select();
   }
@@ -34,7 +38,7 @@ class basicModel {
     return knex(this.table).where(params).count('id as total');
   }
 
-  pagination (pageSize = 20, currentPage = 1,params={}) {
+  pagination (pageSize = 20, currentPage = 1, params={}) {
     let offset = (currentPage - 1) * pageSize;
     return knex(this.table)
       .where(params)
