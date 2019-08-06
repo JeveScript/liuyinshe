@@ -18,15 +18,15 @@ const managerController = {
     }
   },
   show: async function(req,res,next) {
-      let id = req.params.id;
+    let id = req.params.id;
 
-      try {
-        let manages = await managerModel.show({id});
-        let data = manages[0];
-        res.json({code: 200, messsage: '获取成功', data: data})
-      } catch (err) {
-        res.json({code:0,messsage: '服务器错误'});
-      }
+    try {
+      let manages = await managerModel.show({id});
+      let data = manages[0];
+      res.json({code: 200, messsage: '获取成功', data: data})
+    } catch (err) {
+      res.json({code:0,messsage: '服务器错误'});
+    }
   },
   update:async function(req, res, next) {
     let id = req.params.id;
