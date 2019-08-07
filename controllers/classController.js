@@ -153,7 +153,7 @@ const classController = {
           }
         })
 
-        let userClass = await userClassModel.where({ user_id });
+        let userClass = await userClassModel.where({ user_id, class_id });
         let hasAddClass = userClass.length > 0;
         if(hasAddClass) {
           res.json({code:0, messsage: '用户已加入该班级'});
