@@ -1,6 +1,8 @@
 var classModel = require('./../models/classModel.js');
 var lessonModel = require('./../models/lessonModel.js');
 var { formatDate } = require('./../utils/formatDate.js');
+var userClassModel = require('./../models/userClassModel.js');
+var userLessonModel = require('./../models/userLessonModel.js');
 
 const classController = {
   insert: async function(req,res,next) {
@@ -123,7 +125,13 @@ const classController = {
       lessons.forEach(data => {
         data.date = data.date ? formatDate(data.date) : '-';
       })
+      let users = await userClassModel
+        .where({ class_id: id })
+        .leftJoin('user', 'user_class.user_id', 'user.id')
+        .column('user.id','user.name', 'user.phone', 'user_class.created_at')
+
       res.json({code: 200, messsage: '获取成功', data: {
+        users: users,
         class: klass,
         lessons: lessons
       }})
@@ -131,9 +139,35 @@ const classController = {
       console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
+  },
+  addUser: async function(req,res,next) {
+      let class_id = req.params.id;
+      let user_id = req.body.user_id;
+      try {
+        let lessons = await lessonModel.where({ class_id });
+        let userLessons = lessons.map( data => {
+          return {
+            lesson_id: data.id,
+            class_id: class_id,
+            user_id: user_id,
+          }
+        })
 
+        let userClass = await userClassModel.where({ user_id });
+        let hasAddClass = userClass.length > 0;
+        if(hasAddClass) {
+          res.json({code:0, messsage: '用户已加入该班级'});
+          return
+        }
+
+        await userClassModel.insert({ user_id, class_id });
+        await userLessonModel.insert(userLessons);
+        res.json({code: 200, messsage: '加入成功'})
+      } catch( err ) {
+        console.log(err)
+        res.json({code:0,messsage: '服务器错误'});
+      }
   }
-
 }
 
 module.exports = classController;

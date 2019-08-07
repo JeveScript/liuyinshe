@@ -32,7 +32,11 @@ router.get('/class', classController.index);
 router.post('/class', classController.insert);
 router.put('/class/:id', classController.update);
 router.get('/class/:id', classController.show);
+router.post('/class/:id/adduser', classController.addUser);
 // 课
 router.put('/lesson/:id', lessonController.update);
+router.get('/lesson/:id', lessonController.show);
+router.post('/lesson/:id/callnow', lessonController.callNow);
+
 
 module.exports = router;

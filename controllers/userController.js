@@ -1,4 +1,6 @@
 var userModel = require('./../models/userModel.js');
+var userClassModel = require('./../models/userClassModel.js');
+var { formatDate } = require('./../utils/formatDate.js');
 
 const userController = {
   insert: async function(req,res,next) {
@@ -24,9 +26,23 @@ const userController = {
       let id = req.params.id;
       try {
         let manages = await userModel.show({id});
+        let klass = await userClassModel
+          .where({ user_id: id })
+          .leftJoin('class', 'user_class.class_id', 'class.id')
+          .column('class.id','class.name', 'class.start_at', 'class.end_at')
+
+        klass.forEach(data => {
+          data.start_at = formatDate(data.start_at)
+          data.end_at = formatDate(data.end_at)
+        });
+
         let data = manages[0];
-        res.json({code: 200, messsage: '获取成功', data: data})
+        res.json({code: 200, messsage: '获取成功', data: {
+          user: data,
+          class: klass
+        }})
       } catch (err) {
+        console.log(err)
         res.json({code:0,messsage: '服务器错误'});
       }
   },
