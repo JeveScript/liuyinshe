@@ -77,7 +77,7 @@ const userController = {
     let params = {};
     if(name) params.name = name;
     if(phone) params.phone = phone;
-    console.log(params)
+
     try {
       let users = await userModel
         .pagination(pageSize, currentPage, params)
