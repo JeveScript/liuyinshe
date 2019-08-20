@@ -45,7 +45,9 @@ const paymentController = {
         })
         // 联表查询，获取用户信息
         .leftJoin('user', 'payment.user_id', 'user.id')
-        .column('payment.id', 'payment.total', 'payment.user_id', 'payment.created_at', 'user.name')
+        .column('payment.id', 'payment.total', 'payment.user_id',
+          'payment.status', 'payment.remark', 
+          'payment.created_at', 'user.name')
         .orderBy('id', 'desc');
 
       // 格式化时间

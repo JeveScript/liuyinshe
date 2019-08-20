@@ -1,6 +1,7 @@
 var userModel = require('./../models/userModel.js');
 var userClassModel = require('./../models/userClassModel.js');
-var { formatDate } = require('./../utils/formatDate.js');
+var { formatDate, formatTime } = require('./../utils/formatDate.js');
+var paymentModel = require('./../models/paymentModel.js');
 
 const userController = {
   insert: async function(req,res,next) {
@@ -23,28 +24,32 @@ const userController = {
     }
   },
   show: async function(req,res,next) {
-      let id = req.params.id;
-      try {
-        let manages = await userModel.show({id});
-        let klass = await userClassModel
-          .where({ user_id: id })
-          .leftJoin('class', 'user_class.class_id', 'class.id')
-          .column('class.id','class.name', 'class.start_at', 'class.end_at')
+    let id = req.params.id;
+    try {
+      let users = await userModel.show({id});
+      let klass = await userClassModel
+        .where({ user_id: id })
+        .leftJoin('class', 'user_class.class_id', 'class.id')
+        .column('class.id','class.name', 'class.start_at', 'class.end_at')
+      let payments = await paymentModel.where({ user_id: id });
+      payments.forEach(data => data.created_at = formatTime(data.created_at));
 
-        klass.forEach(data => {
-          data.start_at = formatDate(data.start_at)
-          data.end_at = formatDate(data.end_at)
-        });
+      klass.forEach(data => {
+        data.start_at = formatDate(data.start_at)
+        data.end_at = formatDate(data.end_at)
+      });
 
-        let data = manages[0];
-        res.json({code: 200, messsage: '获取成功', data: {
-          user: data,
-          class: klass
-        }})
-      } catch (err) {
-        console.log(err)
-        res.json({code:0,messsage: '服务器错误'});
-      }
+      let userInfo = users[0];
+      userInfo.birthday = formatDate(userInfo.birthday);
+      res.json({code: 200, messsage: '获取成功', data: {
+        user: userInfo,
+        class: klass,
+        payments,
+      }})
+    } catch (err) {
+      console.log(err)
+      res.json({code:0,messsage: '服务器错误'});
+    }
   },
   update: async function(req, res, next) {
     let id = req.params.id;
@@ -83,6 +88,10 @@ const userController = {
         .pagination(pageSize, currentPage, params)
         .orderBy('id', 'desc');
       let usersCount = await userModel.count(params);
+
+      users.forEach(data => {
+        data.birthday = formatDate(data.birthday)
+      });
 
       let total = usersCount[0].total;
       res.json({code: 200, messsage: '获取成功', data: {
