@@ -41,6 +41,7 @@ router.post('/class/:id/adduser', authMiddleware.mustManager, classController.ad
 router.put('/lesson/:id', authMiddleware.mustManager, lessonController.update);
 router.get('/lesson/:id', authMiddleware.mustManager, lessonController.show);
 router.post('/lesson/:id/callnow', authMiddleware.mustManager, lessonController.callNow);
+router.post('/lesson/:id/status', authMiddleware.mustManager, lessonController.status);
 
 
 module.exports = router;

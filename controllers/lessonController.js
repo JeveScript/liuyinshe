@@ -23,13 +23,29 @@ const lessonController = {
       res.json({code:0,messsage: '服务器错误'});
     }
   },
+  status: async function(req,res,next) {
+    let id = req.params.id;
+    let status = req.body.status;
+    console.log(status)
+    if(!status) {
+      res.json({code:0,messsage: '参数缺少'});
+      return
+    }
+
+    try {
+      await lessonModel.update(id, { status });
+      res.json({code: 200, messsage: '修改成功'})
+    } catch (err) {
+      res.json({code:0,messsage: '服务器错误'});
+    }
+  },
   show: async function(req,res, next ) {
     let lesson_id = req.params.id;
 
     try {
       let lessons = await lessonModel.where({ id: lesson_id })
       let lesson = lessons[0];
-      lesson.date = formatDate(lesson.date)
+      lesson.date = lesson.date ? formatDate(lesson.date) : '';
       let users = await userLessonModel
         .where({ lesson_id })
         .leftJoin('user', 'user_lesson.user_id', 'user.id')
@@ -81,11 +97,9 @@ const lessonController = {
         .increment({ balance: total })
       res.json({code: 200, messsage: '点名成功'})
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
-
-  }
+  },
 }
 
 module.exports = lessonController;

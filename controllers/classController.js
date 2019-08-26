@@ -1,6 +1,6 @@
 var classModel = require('./../models/classModel.js');
 var lessonModel = require('./../models/lessonModel.js');
-var { formatDate } = require('./../utils/formatDate.js');
+var { formatDate, formatTime } = require('./../utils/formatDate.js');
 var userClassModel = require('./../models/userClassModel.js');
 var userLessonModel = require('./../models/userLessonModel.js');
 
@@ -10,11 +10,11 @@ const classController = {
     let description = req.body.description || '';
     let course_id = req.body.course_id;
     let price = req.body.price;
-    let lesson_count = req.body.lesson_count;
+    let lesson_count = Number(req.body.lesson_count);
     let start_at = req.body.start_at;
     let end_at = req.body.end_at;
 
-    if(!name || !course_id || isNaN(price) || isNaN(lesson_count) || !start_at || !end_at) {
+    if(!name || !course_id || isNaN(price) || !lesson_count || !start_at || !end_at) {
       res.json({code:0,messsage: '参数缺少'});
       return
     }
@@ -25,7 +25,7 @@ const classController = {
       let lessonPrice = price/lesson_count;
       let lessons = new Array(lesson_count).fill({ class_id, price: lessonPrice })
       await lessonModel.insert(lessons);
-      res.json({code:200,messsage: '添加成功'});
+      res.json({code:200,messsage: '添加成功', data: { class_id }});
     } catch (err) {
       console.log(err)
       res.json({code:0,messsage: '服务器错误'});
@@ -114,7 +114,7 @@ const classController = {
       let classes = await classModel.show({ 'class.id': id})
         .leftJoin('course', 'class.course_id', 'course.id')
         .column('class.id', 'class.name', 'class.course_id', 'class.price', 'class.status', 
-          'class.start_at', 'class.end_at',
+          'class.start_at', 'class.end_at', 'class.description',
           { course_name: 'course.name' });
       let klass = classes[0];
       klass.start_at = formatDate(klass.start_at)
@@ -123,12 +123,14 @@ const classController = {
       let class_id = klass.id;
       let lessons = await lessonModel.show({ class_id })
       lessons.forEach(data => {
-        data.date = data.date ? formatDate(data.date) : '-';
+        data.date = data.date ? formatDate(data.date) : '';
       })
       let users = await userClassModel
         .where({ class_id: id })
         .leftJoin('user', 'user_class.user_id', 'user.id')
         .column('user.id','user.name', 'user.phone', 'user_class.created_at')
+
+      users.forEach(data => data.created_at = formatTime(data.created_at));
 
       res.json({code: 200, messsage: '获取成功', data: {
         users: users,
