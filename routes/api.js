@@ -7,7 +7,9 @@ var courseController = require('./../controllers/courseController.js');
 var classController = require('./../controllers/classController.js');
 var lessonController = require('./../controllers/lessonController.js');
 var authController = require('./../controllers/authController.js');
+var miniController = require('./../controllers/miniController.js');
 var authMiddleware = require('./../middlewares/auth.js');
+
 
 // 通用
 router.post('/auth/login', authController.login);
@@ -43,5 +45,11 @@ router.get('/lesson/:id', authMiddleware.mustManager, lessonController.show);
 router.post('/lesson/:id/callnow', authMiddleware.mustManager, lessonController.callNow);
 router.post('/lesson/:id/status', authMiddleware.mustManager, lessonController.status);
 
+//小程序
+router.post('/miniprogram/wxlogin', miniController.wxlogin);
+router.post('/miniprogram/wxbind', miniController.wxbind);
+router.get('/miniprogram/user/:user_id/class', miniController.class);
+router.get('/miniprogram/user/:user_id/class/:class_id', miniController.classItem);
+router.post('/miniprogram/user-lesson/:id/leave-apply', miniController.leaveApply);
 
 module.exports = router;

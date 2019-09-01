@@ -20,7 +20,17 @@ const formatDate = date => {
   return [year, month, day].map(formatNumber).join('-')
 }
 
+const formatMin = time => {
+  if(!time) {
+    return '-'
+  }
+
+  let timeArr = time.split(':');
+  return timeArr[0] + ':' + timeArr[1];
+}
+
 module.exports = {
   formatTime: formatTime,
-  formatDate: formatDate
+  formatDate: formatDate,
+  formatMin,
 }

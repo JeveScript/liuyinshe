@@ -1,5 +1,5 @@
-var managerModel = require('./../models/managerModel.js');
-var authCode = require('./../utils/authCode.js');
+const managerModel = require('./../models/managerModel.js');
+const authCode = require('./../utils/authCode.js');
 
 const authController = {
   login: async function(req,res,next) {

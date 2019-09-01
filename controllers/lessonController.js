@@ -77,7 +77,7 @@ const lessonController = {
         res.json({code:0,messsage: '该用户没有报班，没有该课程'});
         return
       }
-      if(userLesson.status === 2) {
+      if(userLesson.status === 1) {
         res.json({code:0,messsage: '该用户已上课'});
         return
       }
@@ -85,17 +85,17 @@ const lessonController = {
       let lessons = await lessonModel.where({id: lesson_id})
       let lessonInfo = lessons[0];
       let total = - lessonInfo.price;
-      await userLessonModel.update(userLesson.id, { status: 2, finish_at: new Date()});
+      await userLessonModel.update(userLesson.id, { status: 1, finish_at: new Date()});
       await paymentModel.insert({ 
           user_id: user_id, 
           status: 2, 
           total:  total, 
-          remark:  '用户上课 lesson_id:' + lesson_id
+          remark:  '用户补课 lesson_id:' + lesson_id
         })
       await userModel
         .where({ id: user_id })
         .increment({ balance: total })
-      res.json({code: 200, messsage: '点名成功'})
+      res.json({code: 200, messsage: '补课成功'})
     } catch (err) {
       res.json({code:0,messsage: '服务器错误'});
     }

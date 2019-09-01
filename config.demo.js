@@ -7,5 +7,9 @@ module.exports = {
       password : 'xxx',
       database : 'xxx'
     }
+  },
+  miniapp: {
+    appid: 'xxx',
+    secret: 'xxx',
   }
 }
