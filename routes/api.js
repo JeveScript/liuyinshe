@@ -1,15 +1,15 @@
-var express = require('express');
-var router = express.Router();
-var managerController = require('./../controllers/managerController.js');
-var userController = require('./../controllers/userController.js');
-var paymentController = require('./../controllers/paymentController.js');
-var courseController = require('./../controllers/courseController.js');
-var classController = require('./../controllers/classController.js');
-var lessonController = require('./../controllers/lessonController.js');
-var authController = require('./../controllers/authController.js');
-var miniController = require('./../controllers/miniController.js');
-var authMiddleware = require('./../middlewares/auth.js');
-
+const express = require('express');
+const router = express.Router();
+const managerController = require('./../controllers/managerController.js');
+const userController = require('./../controllers/userController.js');
+const paymentController = require('./../controllers/paymentController.js');
+const courseController = require('./../controllers/courseController.js');
+const classController = require('./../controllers/classController.js');
+const lessonController = require('./../controllers/lessonController.js');
+const authController = require('./../controllers/authController.js');
+const leaveController = require('./../controllers/leaveController.js');
+const miniController = require('./../controllers/miniController.js');
+const authMiddleware = require('./../middlewares/auth.js');
 
 // 通用
 router.post('/auth/login', authController.login);
@@ -44,6 +44,9 @@ router.put('/lesson/:id', authMiddleware.mustManager, lessonController.update);
 router.get('/lesson/:id', authMiddleware.mustManager, lessonController.show);
 router.post('/lesson/:id/callnow', authMiddleware.mustManager, lessonController.callNow);
 router.post('/lesson/:id/status', authMiddleware.mustManager, lessonController.status);
+// 请假
+router.get('/leave', authMiddleware.mustManager, leaveController.index);
+router.put('/leave/:id', authMiddleware.mustManager, leaveController.update);
 
 //小程序
 router.post('/miniprogram/wxlogin', miniController.wxlogin);
