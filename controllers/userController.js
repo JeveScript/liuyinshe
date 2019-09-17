@@ -11,13 +11,23 @@ const userController = {
     let birthday = req.body.birthday;
     let sms_name = req.body.sms_name;
     let sms_phone = req.body.sms_phone;
+    let site = req.body.site;
+    let school = req.body.school;
+    let status = req.body.status  || 1;
+
     if(!name || !phone || !sex || !birthday || !sms_name || !sms_phone) {
       res.json({code:0,messsage: '参数缺少'});
       return
     }
+    let judge = await userModel.where({phone});
+      console.log(judge,phone);
+      if(judge.length >= 1){
+        console.log(123)
+          return res.json({code:0,messsage:'用户已存在'})
+      }
     birthday = new Date(birthday);
     try {
-      await userModel.insert({ name, sex, phone, birthday, sms_name, sms_phone});
+      await userModel.insert({ name, sex, phone, birthday, sms_name, sms_phone, status, school, site});
       res.json({code:200,messsage: '添加成功'});
     } catch (err) {
       res.json({code:0,messsage: '服务器错误'});
@@ -31,7 +41,7 @@ const userController = {
         .where({ user_id: id })
         .leftJoin('class', 'user_class.class_id', 'class.id')
         .column('class.id','class.name', 'class.start_at', 'class.end_at')
-      let payments = await paymentModel.where({ user_id: id });
+      let payments = await paymentModel.where({ user_id: id }).limit(200).orderBy('id', 'desc');;
       payments.forEach(data => data.created_at = formatTime(data.created_at));
 
       klass.forEach(data => {
@@ -59,15 +69,17 @@ const userController = {
     let birthday = req.body.birthday;
     let sms_name = req.body.sms_name;
     let sms_phone = req.body.sms_phone;
-    console.log({ name, sex, phone, birthday, sms_name, sms_phone })
-    if(!name || !phone || !sex || !birthday || !sms_name || !sms_phone) {
+    let status = req.body.status;
+    let site = req.body.site;
+    let school = req.body.school;
+    if(!name || !phone || !sex || !birthday || !sms_name || !sms_phone || !status) {
       res.json({code:0,messsage: '参数缺少'});
       return
     }
 
     try {
       birthday = new Date(birthday);
-      await userModel.update(id, { name, sex, phone, birthday, sms_name, sms_phone });
+      await userModel.update(id, { name, sex, phone, birthday, sms_name, sms_phone, status, site, school});
       res.json({code: 200, messsage: '修改成功'})
     } catch (err) {
       console.log(err)
@@ -104,6 +116,18 @@ const userController = {
       }})
     } catch (err) {
       res.json({code:0,messsage: '服务器错误'});
+    }
+  },
+  userS: async function(req, res, next){
+    try{
+      console.log(123)
+      let userData = await userModel.knex().where('balance', '<',300).select();
+      console.log(userData,123)
+      res.json({code:200, messsage: '获取成功', data:userData});
+    }catch(e){
+      console.log(e)
+      res.json({code:0,messsage: '服务器错误', });
+
     }
   }
 }

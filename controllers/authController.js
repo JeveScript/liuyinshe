@@ -5,9 +5,11 @@ const authController = {
   login: async function(req,res,next) {
     let phone = req.body.phone;
     let password = req.body.password;
-    let manages = await managerModel.where({ phone, password });
-    let manage = manages[0];
-
+    if(!phone || !password) {
+      return res.json({ code: 0 , message: '参数缺少'})
+    }
+      let manages = await managerModel.where({ phone, password });
+      let manage = manages[0];
     if(!manage) {
       res.json({ code: 0 , message: '账号密码错误'})
       return

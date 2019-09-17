@@ -61,6 +61,21 @@ const lessonController = {
       res.json({code:0,messsage: '服务器错误'});
     }
   },
+  newDateShow: async function( req, res, next){
+    try{
+      let newDate = formatDate(new Date());
+      let data = await lessonModel.knex().whereBetween('date',[`${newDate} 00:00`, `${newDate} 23:59`])
+      .leftJoin('class','class.id','lesson.class_id')
+      .column('lesson.id','lesson.date','lesson.start_time','lesson.end_time','class.name')
+      .select();
+      data.forEach(item => {if(item.date) item.date= formatDate(item.date)}) 
+      res.json({code:200,data:data})
+    }catch(e){
+      console.log(e)
+      res.json({code:0,})
+
+    }
+  },
   callNow: async function(req,res,next) {
     let lesson_id = req.params.id;
     let user_id = req.body.user_id;

@@ -4,15 +4,15 @@ const courseController = {
   insert: async function(req,res,next) {
     let name = req.body.name;
     let description = req.body.description;
-    let teacher = req.body.teacher;
-    let teacher_phone = req.body.teacher_phone;
-    if(!name || !description || !teacher || !teacher_phone) {
+    let course_image = req.body.course_image;
+    if(!name || !description || !course_image) {
       res.json({code:0,messsage: '参数缺少'});
       return
     }
 
     try {
-      await courseModel.insert({ name, description, teacher, teacher_phone });
+      console.log(name, description,course_image)
+      await courseModel.insert({ name, description,course_image});
       res.json({code:200,messsage: '添加成功'});
     } catch (err) {
       res.json({code:0,messsage: '服务器错误'});
@@ -33,17 +33,16 @@ const courseController = {
     let id = req.params.id;
     let name = req.body.name;
     let description = req.body.description;
-    let teacher = req.body.teacher;
-    let teacher_phone = req.body.teacher_phone;
+    let course_image = req.body.course_image;
 
-    if(!name || !description || !teacher || !teacher_phone) {
+    if(!id || !name || !description || !course_image) {
       res.json({code:0,messsage: '参数缺少'});
       return
     }
 
 
     try {
-      await courseModel.update(id, { name, description, teacher, teacher_phone });
+      await courseModel.update(id, { name, description, course_image });
       res.json({code: 200, messsage: '修改成功'})
     } catch (err) {
       res.json({code:0,messsage: '服务器错误'});

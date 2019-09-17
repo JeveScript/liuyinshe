@@ -9,7 +9,12 @@ const lessonController = require('./../controllers/lessonController.js');
 const authController = require('./../controllers/authController.js');
 const leaveController = require('./../controllers/leaveController.js');
 const miniController = require('./../controllers/miniController.js');
+const teacherController = require('./../controllers/teacherController.js');
+const qiniuController = require('./../controllers/qiniu.js');
+
+
 const authMiddleware = require('./../middlewares/auth.js');
+
 
 // 通用
 router.post('/auth/login', authController.login);
@@ -20,6 +25,7 @@ router.put('/manager/:id', authMiddleware.mustManager, managerController.update)
 router.delete('/manager/:id', authMiddleware.mustManager, managerController.delete);
 router.get('/manager', authMiddleware.mustManager, managerController.index);
 // 用户
+router.get('/userS',authMiddleware.mustManager, userController.userS)
 router.post('/user', authMiddleware.mustManager, userController.insert);
 router.get('/user/:id', authMiddleware.mustManager, userController.show);
 router.put('/user/:id', authMiddleware.mustManager, userController.update);
@@ -44,6 +50,7 @@ router.put('/lesson/:id', authMiddleware.mustManager, lessonController.update);
 router.get('/lesson/:id', authMiddleware.mustManager, lessonController.show);
 router.post('/lesson/:id/callnow', authMiddleware.mustManager, lessonController.callNow);
 router.post('/lesson/:id/status', authMiddleware.mustManager, lessonController.status);
+router.get('/nowdate/lesson',authMiddleware.mustManager, lessonController.newDateShow)
 // 请假
 router.get('/leave', authMiddleware.mustManager, leaveController.index);
 router.put('/leave/:id', authMiddleware.mustManager, leaveController.update);
@@ -54,5 +61,14 @@ router.post('/miniprogram/wxbind', miniController.wxbind);
 router.get('/miniprogram/user/:user_id/class', miniController.class);
 router.get('/miniprogram/user/:user_id/class/:class_id', miniController.classItem);
 router.post('/miniprogram/user-lesson/:id/leave-apply', miniController.leaveApply);
+
+// 老师
+router.get('/teacher', teacherController.index);
+router.get('/teacher/:teacher_id', teacherController.show);
+router.put('/teacher/:teacher_id',teacherController.update);
+router.post('/teacher',teacherController.insert);
+
+// 七牛云获取token
+router.get('/qiniu/token',qiniuController.setQiniuToken)
 
 module.exports = router;
