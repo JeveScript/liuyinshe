@@ -11,7 +11,7 @@ const leaveController = require('./../controllers/leaveController.js');
 const miniController = require('./../controllers/miniController.js');
 const teacherController = require('./../controllers/teacherController.js');
 const qiniuController = require('./../controllers/qiniu.js');
-
+const noteController = require('./../controllers/note.js');
 
 const authMiddleware = require('./../middlewares/auth.js');
 
@@ -70,5 +70,10 @@ router.post('/teacher',teacherController.insert);
 
 // 七牛云获取token
 router.get('/qiniu/token',qiniuController.setQiniuToken)
+
+// 发短信
+router.post('/note',noteController.send)
+router.get('/note',noteController.show)
+
 
 module.exports = router;
