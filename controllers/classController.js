@@ -40,6 +40,7 @@ const classController = {
     let end_at = req.body.end_at;
     let status = req.body.status;
     let teacher_id = req.body.teacher_id;
+    console.log(name, description, course_id, status, start_at, end_at, teacher_id,id)
     if(!name || !course_id || !start_at || !end_at || !teacher_id) {
       res.json({code:0,messsage: '参数缺少'});
       return

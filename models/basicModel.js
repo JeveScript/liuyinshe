@@ -44,6 +44,7 @@ class basicModel {
         .whereBetween(dateFilter.column,[`${dateFilter.startAt} 00:00`, `${dateFilter.endAt} 23:59`])
         .count('id as total');
     }else{
+      console.log(this.table,params,123);
       return knex(this.table).where(params).count('id as total');
     }
   }

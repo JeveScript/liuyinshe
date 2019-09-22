@@ -5,6 +5,7 @@ const courseController = {
     let name = req.body.name;
     let description = req.body.description;
     let course_image = req.body.course_image;
+    console.log(name, description,course_image);
     if(!name || !description || !course_image) {
       res.json({code:0,messsage: '参数缺少'});
       return
@@ -34,7 +35,7 @@ const courseController = {
     let name = req.body.name;
     let description = req.body.description;
     let course_image = req.body.course_image;
-
+    console.log(id, name, description, course_image )
     if(!id || !name || !description || !course_image) {
       res.json({code:0,messsage: '参数缺少'});
       return
