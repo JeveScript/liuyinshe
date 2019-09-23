@@ -5,7 +5,6 @@ const managerController = {
     let name = req.body.name;
     let password = req.body.password;
     let phone = req.body.phone;
-    console.log(1234)
     if(!name || !password || !phone) {
       res.json({code:0,messsage: '参数缺少'});
       return
@@ -13,9 +12,7 @@ const managerController = {
 
     try {
       let judge = await managerModel.where({phone});
-      console.log(judge,phone);
       if(judge.length >= 1){
-        console.log(123)
           return res.json({code:0,messsage:'用户已存在'})
       }
       await managerModel.insert({ name, password, phone});
@@ -68,7 +65,6 @@ const managerController = {
       let manages = await managerModel.sortAll();
       res.json({code: 200, messsage: '获取成功', data: manages})
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
   }

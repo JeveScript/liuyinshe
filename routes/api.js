@@ -11,7 +11,7 @@ const leaveController = require('./../controllers/leaveController.js');
 const miniController = require('./../controllers/miniController.js');
 const teacherController = require('./../controllers/teacherController.js');
 const qiniuController = require('./../controllers/qiniu.js');
-const noteController = require('./../controllers/note.js');
+const sms_logController = require('../controllers/sms_log.js');
 
 const authMiddleware = require('./../middlewares/auth.js');
 
@@ -72,8 +72,8 @@ router.post('/teacher',teacherController.insert);
 router.get('/qiniu/token',qiniuController.setQiniuToken)
 
 // 发短信
-router.post('/note',noteController.send)
-router.get('/note',noteController.show)
+router.post('/sms_log',sms_logController.send)
+router.get('/sms_log',sms_logController.show)
 
 
 module.exports = router;

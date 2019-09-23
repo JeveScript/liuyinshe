@@ -5,14 +5,12 @@ const courseController = {
     let name = req.body.name;
     let description = req.body.description;
     let course_image = req.body.course_image;
-    console.log(name, description,course_image);
     if(!name || !description || !course_image) {
       res.json({code:0,messsage: '参数缺少'});
       return
     }
 
     try {
-      console.log(name, description,course_image)
       await courseModel.insert({ name, description,course_image});
       res.json({code:200,messsage: '添加成功'});
     } catch (err) {
@@ -35,7 +33,6 @@ const courseController = {
     let name = req.body.name;
     let description = req.body.description;
     let course_image = req.body.course_image;
-    console.log(id, name, description, course_image )
     if(!id || !name || !description || !course_image) {
       res.json({code:0,messsage: '参数缺少'});
       return
@@ -64,7 +61,6 @@ const courseController = {
       let courses = await courseModel.sortAll();
       res.json({code: 200, messsage: '获取成功', data: courses })
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
   }

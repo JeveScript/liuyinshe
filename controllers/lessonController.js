@@ -26,7 +26,6 @@ const lessonController = {
   status: async function(req,res,next) {
     let id = req.params.id;
     let status = req.body.status;
-    console.log(status)
     if(!status) {
       res.json({code:0,messsage: '参数缺少'});
       return
@@ -62,7 +61,6 @@ const lessonController = {
         users: users,
       }})
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
   },
@@ -76,7 +74,6 @@ const lessonController = {
       data.forEach(item => {if(item.date) item.date= formatDate(item.date)}) 
       res.json({code:200,data:data})
     }catch(e){
-      console.log(e)
       res.json({code:0,})
 
     }

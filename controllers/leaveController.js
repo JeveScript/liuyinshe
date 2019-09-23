@@ -42,7 +42,6 @@ const leaveController = {
         }
       }})
     }catch(e) {
-      console.log(e);
       res.json({code:0,messsage: '服务器错误'});
     }
   },
@@ -103,7 +102,6 @@ const leaveController = {
         res.json({code:200,messsage: '状态修改成功'});
       }
     }catch(e) {
-      console.log(e)
       res.json({code:0,messsage: '服务器错误'});
     }
   }

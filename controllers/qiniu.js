@@ -14,7 +14,6 @@ var uploadToken=putPolicy.uploadToken(mac);
 const qiniuController = {
     setQiniuToken:function(req, res,next){
         try{
-            console.log(uploadToken,123)
             res.json({code:200, data:{uploadToken,domain}, messsage:'请求成功'})
         }catch{
             res.json({code:0, messsage:"服务器错误"})

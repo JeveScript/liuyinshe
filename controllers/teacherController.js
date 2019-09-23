@@ -1,5 +1,6 @@
 var teacherModel = require('./../models/teacherModel.js');
-
+var classModel = require('./../models/classModel.js');
+var { formatTime } = require('./../utils/formatDate.js');
 const teacherController = {
     insert: async function( req, res, next){
         try{
@@ -18,7 +19,6 @@ const teacherController = {
             await teacherModel.insert({teacher_name,teacher_phone,teacher_intro,imageUrl})
             res.json({code:200, messsage:'添加成功'})
         }catch(e){
-            console.log(e)
             res.json({code:0, messsage:'服务器错误'})
 
         }
@@ -45,10 +45,14 @@ const teacherController = {
         try{    
             let id = req.params.teacher_id;
             let teacherData = await teacherModel.where({id});
-            console.log(teacherData)
-            res.json({code:200, data:teacherData[0]})
+            let classData = await classModel.where({teacher_id:id})
+            classData.forEach(item => {
+                if(item.created_at) item.created_at = formatTime(item.created_at);
+                if(item.end_at) item.end_at = formatTime(item.end_at);
+                if(item.start_at) item.start_at  = formatTime(item.start_at);
+            })
+            res.json({code:200, data:{teacherData:teacherData[0],classData}})
         }catch(e){
-            console.log(e)
             res.json({code:0, messsage:'服务器错误'})
 
         }

@@ -27,7 +27,6 @@ const classController = {
       await lessonModel.insert(lessons);
       res.json({code:200,messsage: '添加成功', data: { class_id }});
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
   },
@@ -40,7 +39,6 @@ const classController = {
     let end_at = req.body.end_at;
     let status = req.body.status;
     let teacher_id = req.body.teacher_id;
-    console.log(name, description, course_id, status, start_at, end_at, teacher_id,id)
     if(!name || !course_id || !start_at || !end_at || !teacher_id) {
       res.json({code:0,messsage: '参数缺少'});
       return
@@ -50,7 +48,6 @@ const classController = {
       await classModel.update(id, { name, description, course_id, status, start_at, end_at, teacher_id});
       res.json({code: 200, messsage: '修改成功'})
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
   },
@@ -104,7 +101,6 @@ const classController = {
         }
       }})
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
   },
@@ -114,9 +110,10 @@ const classController = {
     try {
       let classes = await classModel.show({ 'class.id': id})
         .leftJoin('course', 'class.course_id', 'course.id')
+        .leftJoin('teacher', 'teacher.id', 'class.teacher_id',)
         .column('class.id', 'class.name', 'class.course_id', 'class.price', 'class.status', 'class.teacher_id',
           'class.start_at', 'class.end_at', 'class.description',
-          { course_name: 'course.name' });
+          { course_name: 'course.name' },{teacher_name:'teacher.teacher_name'},{teacher_phone:'teacher.teacher_phone'});
       let klass = classes[0];
       klass.start_at = formatDate(klass.start_at)
       klass.end_at = formatDate(klass.end_at)
@@ -139,7 +136,6 @@ const classController = {
         lessons: lessons
       }})
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
   },
@@ -167,7 +163,6 @@ const classController = {
         await userLessonModel.insert(userLessons);
         res.json({code: 200, messsage: '加入成功'})
       } catch( err ) {
-        console.log(err)
         res.json({code:0,messsage: '服务器错误'});
       }
   }
