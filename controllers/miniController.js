@@ -32,7 +32,6 @@ const miniController = {
         token
       }})
     } catch(err) {
-      console.log(err)
       res.json({ code: 0, message: '登录失败' })
     }
   },
@@ -66,7 +65,6 @@ const miniController = {
       await userModel.update(userInfo.id,{ open_id });
       res.json({ code: 200, success: '绑定成功' });
     } catch(err) {
-      console.log(err)
       res.json({ code: 0, message: '绑定失败' })
     }
   },
@@ -99,7 +97,6 @@ const miniController = {
       })
       res.json({code:200, data: { lessons: lessons }})
     }catch(e) {
-      console.log(e)
       res.json({ code: 0, message: '信息获取失败' })
     }
   },
@@ -122,7 +119,6 @@ const miniController = {
       await userLessonModel.update(id, { status: 2 });
       res.json({code:200,messsage: 'success'});
     }catch (e) {
-      console.log(e)
       res.json({code:0,messsage: '服务器错误'});
     }
   }

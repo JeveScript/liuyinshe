@@ -22,7 +22,6 @@ const paymentController = {
         .increment({ balance: total })
       res.json({code:200,messsage: '添加成功'});
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
   },
@@ -67,7 +66,6 @@ const paymentController = {
         }
       }})
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
   }

@@ -20,9 +20,7 @@ const userController = {
       return
     }
     let judge = await userModel.where({phone});
-      console.log(judge,phone);
       if(judge.length >= 1){
-        console.log(123)
           return res.json({code:0,messsage:'用户已存在'})
       }
     birthday = new Date(birthday);
@@ -57,7 +55,6 @@ const userController = {
         payments,
       }})
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
   },
@@ -82,7 +79,6 @@ const userController = {
       await userModel.update(id, { name, sex, phone, birthday, sms_name, sms_phone, status, site, school});
       res.json({code: 200, messsage: '修改成功'})
     } catch (err) {
-      console.log(err)
       res.json({code:0,messsage: '服务器错误'});
     }
   },
@@ -120,12 +116,9 @@ const userController = {
   },
   userS: async function(req, res, next){
     try{
-      console.log(123)
       let userData = await userModel.knex().where('balance', '<',300).select();
-      console.log(userData,123)
       res.json({code:200, messsage: '获取成功', data:userData});
     }catch(e){
-      console.log(e)
       res.json({code:0,messsage: '服务器错误', });
 
     }
