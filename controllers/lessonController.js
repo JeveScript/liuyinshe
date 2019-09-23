@@ -1,5 +1,5 @@
 var lessonModel = require('./../models/lessonModel.js');
-var { formatDate } = require('./../utils/formatDate.js');
+var { formatDate , formatTime} = require('./../utils/formatDate.js');
 var userLessonModel = require('./../models/userLessonModel.js');
 var paymentModel = require('./../models/paymentModel.js');
 var userModel = require('./../models/userModel.js');
@@ -43,14 +43,19 @@ const lessonController = {
     let lesson_id = req.params.id;
 
     try {
-      let lessons = await lessonModel.where({ id: lesson_id })
+      let lessons = await lessonModel.where({ 'lesson.id': lesson_id })
+      .leftJoin('class', 'class.id', 'lesson.class_id')
+      .column('lesson.id','lesson.end_time', 'lesson.date', 'lesson.start_time', 'lesson.status', 'lesson.price','lesson.class_id',{'className':'class.name'})
       let lesson = lessons[0];
       lesson.date = lesson.date ? formatDate(lesson.date) : '';
       let users = await userLessonModel
         .where({ lesson_id })
         .leftJoin('user', 'user_lesson.user_id', 'user.id')
-        .column('user.id','user.name', 'user_lesson.status', 'user_lesson.finish_at')
-
+        .column('user.id','user.name', 'user_lesson.status', 'user_lesson.finish_at','user.phone')
+        users.forEach(item =>{
+          item.finish_at =  item.finish_at ? formatTime(item.finish_at) : '';
+          item.date =  item.date ? formatTime(item.date) : ''
+        })
 
       res.json({code: 200, messsage: '获取成功', data: {
         lesson: lesson,
@@ -59,6 +64,21 @@ const lessonController = {
     } catch (err) {
       console.log(err)
       res.json({code:0,messsage: '服务器错误'});
+    }
+  },
+  newDateShow: async function( req, res, next){
+    try{
+      let newDate = formatDate(new Date());
+      let data = await lessonModel.knex().whereBetween('date',[`${newDate} 00:00`, `${newDate} 23:59`])
+      .leftJoin('class','class.id','lesson.class_id')
+      .column('lesson.id','lesson.date','lesson.start_time','lesson.end_time','class.name')
+      .select();
+      data.forEach(item => {if(item.date) item.date= formatDate(item.date)}) 
+      res.json({code:200,data:data})
+    }catch(e){
+      console.log(e)
+      res.json({code:0,})
+
     }
   },
   callNow: async function(req,res,next) {

@@ -2,14 +2,24 @@ module.exports = {
   mysql : {
     client: 'mysql',
     connection: {
-      host : 'xxx',
-      user : 'xxx',
-      password : 'xxx',
-      database : 'xxx'
+      host : '###',
+      port: '###',
+      user : '###',
+      password : '###',
+      database : '###'
     }
   },
   miniapp: {
-    appid: 'xxx',
-    secret: 'xxx',
+    appid: '###',
+    secret: '###',
+  },
+  qiniu:{
+    AccessKey: "###",
+    SecretKey: "###",
+    domain:'###'
+  },
+  aliyu:{
+    accessKey: '###',
+    secretKey: '###'
   }
 }

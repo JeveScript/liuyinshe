@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: 127.0.0.1 (MySQL 5.7.24)
+# Host: 127.0.0.1 (MySQL 5.7.23)
 # Database: liuyinshe_v1
-# Generation Time: 2019-09-02 02:05:30 +0000
+# Generation Time: 2019-09-23 01:20:10 +0000
 # ************************************************************
 
 
@@ -36,6 +36,7 @@ CREATE TABLE `class` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `start_at` date DEFAULT NULL,
   `end_at` date DEFAULT NULL,
+  `teacher_id` int(11) DEFAULT NULL COMMENT '老师Id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -50,9 +51,8 @@ CREATE TABLE `course` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `description` text,
-  `teacher` varchar(255) DEFAULT NULL,
-  `teacher_phone` varchar(255) DEFAULT NULL,
   `isdeleted` tinyint(3) DEFAULT NULL,
+  `course_image` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -108,6 +108,25 @@ CREATE TABLE `manager` (
 
 
 
+# Dump of table note
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `note`;
+
+CREATE TABLE `note` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `content` text,
+  `type` varchar(255) DEFAULT NULL,
+  `state` int(11) DEFAULT NULL COMMENT '0是发送成功，1是发送不成功',
+  `template_code` varchar(255) DEFAULT NULL COMMENT '信息模版',
+  `created_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `result` text COMMENT '失败原因',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 # Dump of table payment
 # ------------------------------------------------------------
 
@@ -123,6 +142,24 @@ CREATE TABLE `payment` (
   `manager_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table teacher
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `teacher`;
+
+CREATE TABLE `teacher` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `teacher_name` varchar(255) DEFAULT NULL,
+  `teacher_phone` varchar(255) DEFAULT NULL,
+  `teacher_intro` text COMMENT '老师简介',
+  `isdeleted` int(3) DEFAULT NULL COMMENT '软删除',
+  `imageUrl` varchar(255) DEFAULT NULL,
+  `teacher_intro_html` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -142,6 +179,10 @@ CREATE TABLE `user` (
   `sms_phone` varchar(255) DEFAULT NULL COMMENT '紧急联系人',
   `balance` decimal(65,2) DEFAULT '0.00' COMMENT '金额',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` int(3) DEFAULT NULL COMMENT '状态：1在学，2退学',
+  `site` varchar(255) DEFAULT NULL COMMENT '地址',
+  `school` varchar(255) DEFAULT NULL COMMENT '学校',
+  `integral` int(255) DEFAULT NULL COMMENT '用户积分',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

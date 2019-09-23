@@ -13,14 +13,14 @@ const classController = {
     let lesson_count = Number(req.body.lesson_count);
     let start_at = req.body.start_at;
     let end_at = req.body.end_at;
-
-    if(!name || !course_id || isNaN(price) || !lesson_count || !start_at || !end_at) {
+    let teacher_id = req.body.teacher_id;
+    if(!name || !course_id || isNaN(price) || !lesson_count || !start_at || !end_at || !teacher_id) {
       res.json({code:0,messsage: '参数缺少'});
       return
     }
 
     try {
-      let classIdArr = await classModel.insert({ name, description, course_id, price, lesson_count, start_at, end_at});
+      let classIdArr = await classModel.insert({ name, description, course_id, price, lesson_count, start_at, end_at, teacher_id});
       let class_id = classIdArr[0];
       let lessonPrice = price/lesson_count;
       let lessons = new Array(lesson_count).fill({ class_id, price: lessonPrice })
@@ -39,14 +39,15 @@ const classController = {
     let start_at = req.body.start_at;
     let end_at = req.body.end_at;
     let status = req.body.status;
-
-    if(!name || !course_id || !start_at || !end_at) {
+    let teacher_id = req.body.teacher_id;
+    console.log(name, description, course_id, status, start_at, end_at, teacher_id,id)
+    if(!name || !course_id || !start_at || !end_at || !teacher_id) {
       res.json({code:0,messsage: '参数缺少'});
       return
     }
 
     try {
-      await classModel.update(id, { name, description, course_id, status, start_at, end_at });
+      await classModel.update(id, { name, description, course_id, status, start_at, end_at, teacher_id});
       res.json({code: 200, messsage: '修改成功'})
     } catch (err) {
       console.log(err)
@@ -113,7 +114,7 @@ const classController = {
     try {
       let classes = await classModel.show({ 'class.id': id})
         .leftJoin('course', 'class.course_id', 'course.id')
-        .column('class.id', 'class.name', 'class.course_id', 'class.price', 'class.status', 
+        .column('class.id', 'class.name', 'class.course_id', 'class.price', 'class.status', 'class.teacher_id',
           'class.start_at', 'class.end_at', 'class.description',
           { course_name: 'course.name' });
       let klass = classes[0];

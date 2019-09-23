@@ -22,7 +22,7 @@ const leaveController = {
         .leftJoin('class', 'leave.class_id', 'class.id')
         .column('leave.id', 'leave.lesson_id', 'leave.class_id', 'leave.user_id', 'leave.status',
           'lesson.date', 'lesson.start_time', 'lesson.end_time', 'class.name', 
-          {'user_name': 'user.name'})
+          {'user_name': 'user.name'}).orderBy('id', 'desc');
 
       // 格式化时间
       leaves.forEach(data => {
