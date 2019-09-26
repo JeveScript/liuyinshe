@@ -12,7 +12,7 @@ const qiniuController = {
         try{
             var mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
             var options = {
-                scope: 'liuyinshe',
+                scope: config.qiniu.bucket
             };
             var putPolicy = new qiniu.rs.PutPolicy(options);
             var uploadToken=putPolicy.uploadToken(mac);

@@ -16,7 +16,8 @@ module.exports = {
   qiniu:{
     AccessKey: "###",
     SecretKey: "###",
-    domain:'###'
+    domain:'###',
+    bucket: '###'
   },
   aliyu:{
     accessKey: '###',
