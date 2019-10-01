@@ -114,7 +114,7 @@ const userController = {
       res.json({code:0,messsage: '服务器错误'});
     }
   },
-  userS: async function(req, res, next){
+  pauper: async function(req, res, next){
     try{
       let userData = await userModel.knex().where('balance', '<',300).select();
       res.json({code:200, messsage: '获取成功', data:userData});

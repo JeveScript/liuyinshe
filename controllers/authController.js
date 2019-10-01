@@ -16,12 +16,13 @@ const authController = {
     } else {
       let user_id = manage.id;
       let user_name = manage.name;
+      let user_status = manage.status;
       let str = phone + '\t' + password + '\t' + user_id;
       let token = authCode(str, 'ENCODE');
       // let edcode = authCode(token, 'DECODE').split('\t');
 
       res.json({ code: 200 , message: '登录成功', data: {
-        userInfo: { phone, user_id ,user_name},
+        userInfo: { phone, user_id ,user_name,user_status},
         token: token,
       }})
     }

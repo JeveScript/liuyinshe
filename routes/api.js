@@ -25,7 +25,7 @@ router.put('/manager/:id', authMiddleware.mustManager, managerController.update)
 router.delete('/manager/:id', authMiddleware.mustManager, managerController.delete);
 router.get('/manager', authMiddleware.mustManager, managerController.index);
 // 用户
-router.get('/userS',authMiddleware.mustManager, userController.userS)
+router.get('/pauper',authMiddleware.mustManager, userController.pauper)
 router.post('/user', authMiddleware.mustManager, userController.insert);
 router.get('/user/:id', authMiddleware.mustManager, userController.show);
 router.put('/user/:id', authMiddleware.mustManager, userController.update);
@@ -33,6 +33,7 @@ router.get('/user', authMiddleware.mustManager, userController.index);
 // 收支
 router.post('/payment', authMiddleware.mustManager, paymentController.insert);
 router.get('/payment', authMiddleware.mustManager, paymentController.index);
+router.get('/accounts', authMiddleware.mustManager, paymentController.accounts)
 // 课程
 router.post('/course', authMiddleware.mustManager, courseController.insert);
 router.get('/course/:id', authMiddleware.mustManager, courseController.show);
@@ -63,17 +64,17 @@ router.get('/miniprogram/user/:user_id/class/:class_id', miniController.classIte
 router.post('/miniprogram/user-lesson/:id/leave-apply', miniController.leaveApply);
 
 // 老师
-router.get('/teacher', teacherController.index);
-router.get('/teacher/:teacher_id', teacherController.show);
-router.put('/teacher/:teacher_id',teacherController.update);
-router.post('/teacher',teacherController.insert);
+router.get('/teacher', authMiddleware.mustManager, teacherController.index);
+router.get('/teacher/:teacher_id', authMiddleware.mustManager, teacherController.show);
+router.put('/teacher/:teacher_id',authMiddleware.mustManager, teacherController.update);
+router.post('/teacher',authMiddleware.mustManager, teacherController.insert);
 
 // 七牛云获取token
-router.get('/qiniu/token',qiniuController.setQiniuToken)
+router.get('/qiniu/token',authMiddleware.mustManager, qiniuController.setQiniuToken)
 
 // 发短信
-router.post('/sms_log',sms_logController.send)
-router.get('/sms_log',sms_logController.show)
+router.post('/sms_log',authMiddleware.mustManager, sms_logController.send)
+router.get('/sms_log',authMiddleware.mustManager, sms_logController.show)
 
 
 module.exports = router;

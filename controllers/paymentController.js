@@ -1,6 +1,6 @@
 var paymentModel = require('./../models/paymentModel.js');
 var userModel = require('./../models/userModel.js');
-var { formatTime } = require('./../utils/formatDate.js');
+var { formatTime, formatDate } = require('./../utils/formatDate.js');
 
 const paymentController = {
   insert: async function(req,res,next) {
@@ -66,6 +66,29 @@ const paymentController = {
         }
       }})
     } catch (err) {
+      res.json({code:0,messsage: '服务器错误'});
+    }
+  },
+  accounts: async function(req, res, next){
+    try{
+      let newTime = new Date()
+      let newDate = formatDate(newTime)
+      let startDate = newTime.getFullYear() + '-' + (newTime.getMonth() + 1) + '-' + newTime.getDate()
+      let data  =  await paymentModel.knex().whereBetween('payment.created_at',[`${startDate} 00:00`, `${newDate} 23:59`]).select();
+      let income = 0;
+      let expenditure = 0;
+      data.forEach(item => {
+        if(item.status == 1){
+          income += item.total;
+        }else if (item.status == 2){
+          expenditure += item.total;
+        }
+      })
+      income = Math.abs(income)
+      expenditure = Math.abs(expenditure)
+      res.json({code:200,data: {income, expenditure}});
+
+    }catch(err){
       res.json({code:0,messsage: '服务器错误'});
     }
   }
