@@ -33,7 +33,7 @@ const leaveController = {
 
       let leaveCount = await leaveModel.count(params);
       let total = leaveCount[0].total;
-      res.json({code: 200, messsage: '获取成功', data: {
+      res.json({code: 200, message: '获取成功', data: {
         datas: leaves,
         pagination: {
           total: total,
@@ -42,7 +42,7 @@ const leaveController = {
         }
       }})
     }catch(e) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   update: async function(req,res,next) {
@@ -57,7 +57,7 @@ const leaveController = {
 
       // 已补课
       if(leave.status === 2) {
-        res.json({code:0,messsage: '该课时已补，状态不可修改'});
+        res.json({code:0,message: '该课时已补，状态不可修改'});
         return
       } 
       
@@ -67,12 +67,12 @@ const leaveController = {
         let userLessons = await userLessonModel.show({ user_id, lesson_id });
         let userLesson = userLessons[0];
         if(!userLesson) {
-          res.json({code:0,messsage: '没匹配到课时'});
+          res.json({code:0,message: '没匹配到课时'});
           return
         }
 
         if(userLesson.status === 1) {
-          res.json({code:0,messsage: '该课时以上课，无法修改状态'});
+          res.json({code:0,message: '该课时以上课，无法修改状态'});
           return
         }
 
@@ -94,15 +94,15 @@ const leaveController = {
           .increment({ balance: total });
         // 修改状态
         await leaveModel.update(id, { status });
-        res.json({code: 200, messsage: '点名成功'});
+        res.json({code: 200, message: '点名成功'});
         return
       }else{
         // 修改状态
         await leaveModel.update(id, { status });
-        res.json({code:200,messsage: '状态修改成功'});
+        res.json({code:200,message: '状态修改成功'});
       }
     }catch(e) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   }
 }

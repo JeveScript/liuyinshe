@@ -16,19 +16,19 @@ const userController = {
     let status = req.body.status  || 1;
 
     if(!name || !phone || !sex || !birthday || !sms_name || !sms_phone) {
-      res.json({code:0,messsage: '参数缺少'});
+      res.json({code:0,message: '参数缺少'});
       return
     }
     let judge = await userModel.where({phone});
       if(judge.length >= 1){
-          return res.json({code:0,messsage:'用户已存在'})
+          return res.json({code:0,message:'用户已存在'})
       }
     birthday = new Date(birthday);
     try {
       await userModel.insert({ name, sex, phone, birthday, sms_name, sms_phone, status, school, site});
-      res.json({code:200,messsage: '添加成功'});
+      res.json({code:200,message: '添加成功'});
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   show: async function(req,res,next) {
@@ -49,13 +49,13 @@ const userController = {
 
       let userInfo = users[0];
       userInfo.birthday = formatDate(userInfo.birthday);
-      res.json({code: 200, messsage: '获取成功', data: {
+      res.json({code: 200, message: '获取成功', data: {
         user: userInfo,
         class: klass,
         payments,
       }})
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   update: async function(req, res, next) {
@@ -70,16 +70,16 @@ const userController = {
     let site = req.body.site;
     let school = req.body.school;
     if(!name || !phone || !sex || !birthday || !sms_name || !sms_phone || !status) {
-      res.json({code:0,messsage: '参数缺少'});
+      res.json({code:0,message: '参数缺少'});
       return
     }
 
     try {
       birthday = new Date(birthday);
       await userModel.update(id, { name, sex, phone, birthday, sms_name, sms_phone, status, site, school});
-      res.json({code: 200, messsage: '修改成功'})
+      res.json({code: 200, message: '修改成功'})
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   index: async function(req, res, next ) {
@@ -102,7 +102,7 @@ const userController = {
       });
 
       let total = usersCount[0].total;
-      res.json({code: 200, messsage: '获取成功', data: {
+      res.json({code: 200, message: '获取成功', data: {
         datas: users,
         pagination: {
           total: total,
@@ -111,15 +111,15 @@ const userController = {
         }
       }})
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   pauper: async function(req, res, next){
     try{
       let userData = await userModel.knex().where('balance', '<',300).select();
-      res.json({code:200, messsage: '获取成功', data:userData});
+      res.json({code:200, message: '获取成功', data:userData});
     }catch(e){
-      res.json({code:0,messsage: '服务器错误', });
+      res.json({code:0,message: '服务器错误', });
 
     }
   }

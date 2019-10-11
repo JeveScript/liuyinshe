@@ -10,16 +10,16 @@ const teacherController = {
             let imageUrl = req.body.imageUrl;
 
             if(!teacher_intro || !teacher_name || !teacher_phone || !imageUrl ){
-                return res.json({code:0, messsage: '参数缺少'})
+                return res.json({code:0, message: '参数缺少'})
             }
             let judge = await teacherModel.where({teacher_phone});
             if(judge.length >= 1){
-                return res.json({code:0,messsage:'用户已存在'})
+                return res.json({code:0,message:'用户已存在'})
             }
             await teacherModel.insert({teacher_name,teacher_phone,teacher_intro,imageUrl})
-            res.json({code:200, messsage:'添加成功'})
+            res.json({code:200, message:'添加成功'})
         }catch(e){
-            res.json({code:0, messsage:'服务器错误'})
+            res.json({code:0, message:'服务器错误'})
 
         }
     },
@@ -31,13 +31,13 @@ const teacherController = {
             let teacher_intro = req.body.teacher_intro;
             let imageUrl = req.body.imageUrl;
             if(! teadcher_id || !teacher_intro || !teacher_name || !teacher_phone || !imageUrl){
-                return res.json({code:0, messsage: '参数缺少'})
+                return res.json({code:0, message: '参数缺少'})
             }
             await teacherModel.update(teadcher_id,{teacher_name,teacher_phone,teacher_intro,imageUrl})
-            res.json({code:200, messsage:'编辑成功'})
+            res.json({code:200, message:'编辑成功'})
 
         }catch(e){
-            res.json({code:0, messsage:'服务器错误'})
+            res.json({code:0, message:'服务器错误'})
 
         }
     },
@@ -53,7 +53,7 @@ const teacherController = {
             })
             res.json({code:200, data:{teacherData:teacherData[0],classData}})
         }catch(e){
-            res.json({code:0, messsage:'服务器错误'})
+            res.json({code:0, message:'服务器错误'})
 
         }
     },
@@ -62,7 +62,7 @@ const teacherController = {
             let teacherAll = await teacherModel.all().whereNull('isdeleted').select();
             res.json({code:200, data:teacherAll})
         }catch(e){
-            res.json({code:0, messsage:'服务器错误'})
+            res.json({code:0, message:'服务器错误'})
         }
     }
     

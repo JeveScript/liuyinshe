@@ -12,30 +12,30 @@ const lessonController = {
     let end_time = req.body.end_time;
 
     if(!date || !start_time || !end_time) {
-      res.json({code:0,messsage: '参数缺少'});
+      res.json({code:0,message: '参数缺少'});
       return
     }
 
     try {
       await lessonModel.update(id, { date, start_time, end_time });
-      res.json({code: 200, messsage: '修改成功'})
+      res.json({code: 200, message: '修改成功'})
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   status: async function(req,res,next) {
     let id = req.params.id;
     let status = req.body.status;
     if(!status) {
-      res.json({code:0,messsage: '参数缺少'});
+      res.json({code:0,message: '参数缺少'});
       return
     }
 
     try {
       await lessonModel.update(id, { status });
-      res.json({code: 200, messsage: '修改成功'})
+      res.json({code: 200, message: '修改成功'})
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   show: async function(req,res, next ) {
@@ -56,12 +56,12 @@ const lessonController = {
           item.date =  item.date ? formatTime(item.date) : ''
         })
 
-      res.json({code: 200, messsage: '获取成功', data: {
+      res.json({code: 200, message: '获取成功', data: {
         lesson: lesson,
         users: users,
       }})
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   newDateShow: async function( req, res, next){
@@ -83,7 +83,7 @@ const lessonController = {
     let user_id = req.body.user_id;
 
     if(!user_id) {
-      res.json({code:0,messsage: '缺少用户参数'});
+      res.json({code:0,message: '缺少用户参数'});
       return
     }
 
@@ -91,11 +91,11 @@ const lessonController = {
       let userLessons = await userLessonModel.where({ lesson_id, user_id });
       let userLesson = userLessons[0];
       if(!userLesson) {
-        res.json({code:0,messsage: '该用户没有报班，没有该课程'});
+        res.json({code:0,message: '该用户没有报班，没有该课程'});
         return
       }
       if(userLesson.status === 1) {
-        res.json({code:0,messsage: '该用户已上课'});
+        res.json({code:0,message: '该用户已上课'});
         return
       }
 
@@ -112,9 +112,9 @@ const lessonController = {
       await userModel
         .where({ id: user_id })
         .increment({ balance: total })
-      res.json({code: 200, messsage: '补课成功'})
+      res.json({code: 200, message: '补课成功'})
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
 }

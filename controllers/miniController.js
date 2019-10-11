@@ -108,18 +108,18 @@ const miniController = {
     try{
       let userLessons = await userLessonModel.show({ id });
       if(userLessons[0].status === 1) {
-        res.json({code:0, messsage: '该课时以上课无法请假'});
+        res.json({code:0, message: '该课时以上课无法请假'});
         return
       }
       if(userLessons[0].status === 2) {
-        res.json({code:0, messsage: '该课时已请假'});
+        res.json({code:0, message: '该课时已请假'});
         return
       }
       await leaveModel.insert({ user_id, class_id, lesson_id });
       await userLessonModel.update(id, { status: 2 });
-      res.json({code:200,messsage: 'success'});
+      res.json({code:200,message: 'success'});
     }catch (e) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   }
 }

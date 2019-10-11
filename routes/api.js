@@ -33,7 +33,6 @@ router.get('/user', authMiddleware.mustManager, userController.index);
 // 收支
 router.post('/payment', authMiddleware.mustManager, paymentController.insert);
 router.get('/payment', authMiddleware.mustManager, paymentController.index);
-router.get('/accounts', authMiddleware.mustManager, paymentController.accounts)
 // 课程
 router.post('/course', authMiddleware.mustManager, courseController.insert);
 router.get('/course/:id', authMiddleware.mustManager, courseController.show);

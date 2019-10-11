@@ -15,7 +15,7 @@ const classController = {
     let end_at = req.body.end_at;
     let teacher_id = req.body.teacher_id;
     if(!name || !course_id || isNaN(price) || !lesson_count || !start_at || !end_at || !teacher_id) {
-      res.json({code:0,messsage: '参数缺少'});
+      res.json({code:0,message: '参数缺少'});
       return
     }
 
@@ -25,9 +25,9 @@ const classController = {
       let lessonPrice = price/lesson_count;
       let lessons = new Array(lesson_count).fill({ class_id, price: lessonPrice })
       await lessonModel.insert(lessons);
-      res.json({code:200,messsage: '添加成功', data: { class_id }});
+      res.json({code:200,message: '添加成功', data: { class_id }});
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   update:async function(req, res, next) {
@@ -40,15 +40,15 @@ const classController = {
     let status = req.body.status;
     let teacher_id = req.body.teacher_id;
     if(!name || !course_id || !start_at || !end_at || !teacher_id) {
-      res.json({code:0,messsage: '参数缺少'});
+      res.json({code:0,message: '参数缺少'});
       return
     }
 
     try {
       await classModel.update(id, { name, description, course_id, status, start_at, end_at, teacher_id});
-      res.json({code: 200, messsage: '修改成功'})
+      res.json({code: 200, message: '修改成功'})
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   index: async function(req, res, next ) {
@@ -92,7 +92,7 @@ const classController = {
         endAt: endAt,
       });
       let total = classesCount[0].total;
-      res.json({code: 200, messsage: '获取成功', data: {
+      res.json({code: 200, message: '获取成功', data: {
         datas: classes,
         pagination: {
           total: total,
@@ -101,7 +101,7 @@ const classController = {
         }
       }})
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   show: async function(req, res, next) {
@@ -130,13 +130,13 @@ const classController = {
 
       users.forEach(data => data.created_at = formatTime(data.created_at));
 
-      res.json({code: 200, messsage: '获取成功', data: {
+      res.json({code: 200, message: '获取成功', data: {
         users: users,
         class: klass,
         lessons: lessons
       }})
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   addUser: async function(req,res,next) {
@@ -155,15 +155,15 @@ const classController = {
         let userClass = await userClassModel.where({ user_id, class_id });
         let hasAddClass = userClass.length > 0;
         if(hasAddClass) {
-          res.json({code:0, messsage: '用户已加入该班级'});
+          res.json({code:0, message: '用户已加入该班级'});
           return
         }
 
         await userClassModel.insert({ user_id, class_id });
         await userLessonModel.insert(userLessons);
-        res.json({code: 200, messsage: '加入成功'})
+        res.json({code: 200, message: '加入成功'})
       } catch( err ) {
-        res.json({code:0,messsage: '服务器错误'});
+        res.json({code:0,message: '服务器错误'});
       }
   }
 }

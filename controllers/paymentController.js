@@ -10,7 +10,7 @@ const paymentController = {
     let remark = req.body.remark || '';
 
     if(!user_id || !status || isNaN(total)) {
-      res.json({code:0,messsage: '参数缺少'});
+      res.json({code:0,message: '参数缺少'});
       return
     }
 
@@ -20,9 +20,9 @@ const paymentController = {
       await userModel
         .where({ id: user_id })
         .increment({ balance: total })
-      res.json({code:200,messsage: '添加成功'});
+      res.json({code:200,message: '添加成功'});
     } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code:0,message: '服务器错误'});
     }
   },
   index: async function(req, res, next ) {
@@ -33,8 +33,7 @@ const paymentController = {
     let endAt = req.query.end_at;
     let filterColumn = (startAt && endAt) ? 'payment.created_at' : '';
     let params = {};
-    if(status) params.status = status;
-
+    if(status) params['payment.status'] = status;
     try {
       let payments = await paymentModel
         .pagination(pageSize, currentPage, params, {
@@ -57,23 +56,9 @@ const paymentController = {
         endAt: endAt,
       });
       let total = paymentsCount[0].total;
-      res.json({code: 200, messsage: '获取成功', data: {
-        datas: payments,
-        pagination: {
-          total: total,
-          current_page: currentPage,
-          page_size: pageSize,
-        }
-      }})
-    } catch (err) {
-      res.json({code:0,messsage: '服务器错误'});
-    }
-  },
-  accounts: async function(req, res, next){
-    try{
       let newTime = new Date()
-      let newDate = formatDate(newTime)
-      let startDate = newTime.getFullYear() + '-' + (newTime.getMonth() + 1) + '-' + newTime.getDate()
+      let newDate = endAt ? endAt : formatDate(newTime)
+      let startDate = startAt ? startAt : newTime.getFullYear() + '-' + (newTime.getMonth() + 1) + '-01'
       let data  =  await paymentModel.knex().whereBetween('payment.created_at',[`${startDate} 00:00`, `${newDate} 23:59`]).select();
       let income = 0;
       let expenditure = 0;
@@ -86,13 +71,21 @@ const paymentController = {
       })
       income = Math.abs(income)
       expenditure = Math.abs(expenditure)
-      res.json({code:200,data: {income, expenditure}});
-
-    }catch(err){
-      res.json({code:0,messsage: '服务器错误'});
+      res.json({code: 200, message: '获取成功', data: {
+        datas: payments,
+        income, 
+        expenditure,
+        pagination: {
+          total: total,
+          current_page: currentPage,
+          page_size: pageSize,
+          
+        }
+      }})
+    } catch (err) {
+      res.json({code:0,message: '服务器错误'});
     }
   }
-
 }
 
 module.exports = paymentController;

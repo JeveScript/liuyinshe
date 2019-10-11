@@ -34,16 +34,16 @@ const sms_logController = {
       client.request('SendSms', params, requestOption).then(async (result) => {
        
         await sms_logModel.insert({user_id,content,type,template_code,state:0})
-        return res.json({code:200,messsage:'发送成功'})
+        return res.json({code:200,message:'发送成功'})
 
       },async function( ex) {
         await sms_logModel.insert({user_id,content,type,template_code,state:1, result:JSON.stringify(ex.data)})
-        return res.json({code:0, messsage: ex})
+        return res.json({code:0, message: ex})
       })
       
     }catch(e){
         await sms_logModel.insert({user_id,content,type,template_code,state:1, result:JSON.stringify(e.data)})
-        return res.json({code:0, messsage: e})
+        return res.json({code:0, message: e})
     }
   },
   show:async function(req, res, next) {
@@ -76,9 +76,9 @@ const sms_logController = {
         total:total[0].total
       }
 
-      res.json({code:200, data:{datas, sms_logPagination},messsage:'获取数据成功'})
+      res.json({code:200, data:{datas, sms_logPagination},message:'获取数据成功'})
     }catch(e){
-      res.json({code:0,messsage:'获取数据失败'})
+      res.json({code:0,message:'获取数据失败'})
     }
   }
 }
