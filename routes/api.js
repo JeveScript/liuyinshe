@@ -25,7 +25,7 @@ router.put('/manager/:id', authMiddleware.mustManager, managerController.update)
 router.delete('/manager/:id', authMiddleware.mustManager, managerController.delete);
 router.get('/manager', authMiddleware.mustManager, managerController.index);
 // 用户
-router.get('/pauper',authMiddleware.mustManager, userController.pauper)
+router.get('/user_nomo',authMiddleware.mustManager, userController.user_noMo)
 router.post('/user', authMiddleware.mustManager, userController.insert);
 router.get('/user/:id', authMiddleware.mustManager, userController.show);
 router.put('/user/:id', authMiddleware.mustManager, userController.update);
