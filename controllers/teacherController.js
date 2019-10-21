@@ -1,6 +1,8 @@
 var teacherModel = require('./../models/teacherModel.js');
 var classModel = require('./../models/classModel.js');
 var { formatTime } = require('./../utils/formatDate.js');
+var class_teacherModel = require('./../models/class_teacherModel.js');
+
 const teacherController = {
     insert: async function( req, res, next){
         try{
@@ -45,7 +47,9 @@ const teacherController = {
         try{    
             let id = req.params.teacher_id;
             let teacherData = await teacherModel.where({id});
-            let classData = await classModel.where({teacher_id:id})
+            let classData = await class_teacherModel.where({teacher_id:id})
+            .leftJoin('class',"class_teacher.class_id",'class.id')
+            .column('class.id','class.name','class.description','class.course_id','class.price','class.lesson_count','class.status','class.created_at','class.start_at','class.end_at')
             classData.forEach(item => {
                 if(item.created_at) item.created_at = formatTime(item.created_at);
                 if(item.end_at) item.end_at = formatTime(item.end_at);

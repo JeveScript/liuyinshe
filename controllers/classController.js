@@ -3,27 +3,29 @@ var lessonModel = require('./../models/lessonModel.js');
 var { formatDate, formatTime } = require('./../utils/formatDate.js');
 var userClassModel = require('./../models/userClassModel.js');
 var userLessonModel = require('./../models/userLessonModel.js');
+var class_teacherModel = require('./../models/class_teacherModel.js');
 
 const classController = {
   insert: async function(req,res,next) {
     let name = req.body.name;
     let description = req.body.description || '';
     let course_id = req.body.course_id;
-    let price = req.body.price;
-    let lesson_count = Number(req.body.lesson_count);
     let start_at = req.body.start_at;
     let end_at = req.body.end_at;
     let teacher_id = req.body.teacher_id;
-    if(!name || !course_id || isNaN(price) || !lesson_count || !start_at || !end_at || !teacher_id) {
+    let lesson = req.body.lesson;
+    
+    if(!name || !course_id  || lesson.length <= 0 || !start_at || !end_at || !teacher_id) {
       res.json({code:0,message: '参数缺少'});
       return
     }
-
+    let price = lesson.map(data => {return data.lesson_price}).reduce((a,b) => {return Number(a)+Number(b)})
     try {
-      let classIdArr = await classModel.insert({ name, description, course_id, price, lesson_count, start_at, end_at, teacher_id});
+      let classIdArr = await classModel.insert({ name, description, course_id, price, lesson_count:lesson.length, start_at, end_at});
       let class_id = classIdArr[0];
-      let lessonPrice = price/lesson_count;
-      let lessons = new Array(lesson_count).fill({ class_id, price: lessonPrice })
+      let lessons = lesson.map(data => {return {class_id,price:data.lesson_price,teacher_id:data.teacher_id}})
+      let teacherArr = teacher_id.map(data => {return {teacher_id:data, class_id}})
+      await class_teacherModel.insert(teacherArr)
       await lessonModel.insert(lessons);
       res.json({code:200,message: '添加成功', data: { class_id }});
     } catch (err) {
@@ -45,7 +47,11 @@ const classController = {
     }
 
     try {
-      await classModel.update(id, { name, description, course_id, status, start_at, end_at, teacher_id});
+      await classModel.update(id, { name, description, course_id, status, start_at, end_at});
+      let teacherArr = teacher_id.map(data => {return {teacher_id:data, class_id:id}})
+      await class_teacherModel.ArrDelete({class_id:id})
+      await class_teacherModel.insert(teacherArr)
+      
       res.json({code: 200, message: '修改成功'})
     } catch (err) {
       res.json({code:0,message: '服务器错误'});
@@ -110,16 +116,21 @@ const classController = {
     try {
       let classes = await classModel.show({ 'class.id': id})
         .leftJoin('course', 'class.course_id', 'course.id')
-        .leftJoin('teacher', 'teacher.id', 'class.teacher_id',)
-        .column('class.id', 'class.name', 'class.course_id', 'class.price', 'class.status', 'class.teacher_id',
+        .column('class.id', 'class.name', 'class.course_id', 'class.price', 'class.status', 
           'class.start_at', 'class.end_at', 'class.description',
-          { course_name: 'course.name' },{teacher_name:'teacher.teacher_name'},{teacher_phone:'teacher.teacher_phone'});
+          { course_name: 'course.name' });
+      let teachers = await class_teacherModel.show({'class_id': id})
+      .leftJoin('teacher', "teacher.id","class_teacher.teacher_id")
+      .column("teacher.id","teacher.teacher_name","teacher.teacher_phone");
+      let teacher = teachers.map(data => {return data.id})
       let klass = classes[0];
       klass.start_at = formatDate(klass.start_at)
       klass.end_at = formatDate(klass.end_at)
 
       let class_id = klass.id;
       let lessons = await lessonModel.show({ class_id })
+      .leftJoin('teacher',"lesson.teacher_id","teacher.id")
+      .column('lesson.id',"lesson.class_id","lesson.date","lesson.end_time","lesson.price","lesson.start_time","lesson.status","teacher.teacher_name")
       lessons.forEach(data => {
         data.date = data.date ? formatDate(data.date) : '';
       })
@@ -133,7 +144,9 @@ const classController = {
       res.json({code: 200, message: '获取成功', data: {
         users: users,
         class: klass,
-        lessons: lessons
+        lessons: lessons,
+        teacher,
+        teacherData:teachers
       }})
     } catch (err) {
       res.json({code:0,message: '服务器错误'});

@@ -10,14 +10,14 @@ const lessonController = {
     let date = req.body.date;
     let start_time = req.body.start_time;
     let end_time = req.body.end_time;
-
-    if(!date || !start_time || !end_time) {
+    let teacher_id = req.body.teacher_id;
+    if(!date || !start_time || !end_time || !teacher_id) {
       res.json({code:0,message: '参数缺少'});
       return
     }
 
     try {
-      await lessonModel.update(id, { date, start_time, end_time });
+      await lessonModel.update(id, { date, start_time, end_time, teacher_id});
       res.json({code: 200, message: '修改成功'})
     } catch (err) {
       res.json({code:0,message: '服务器错误'});

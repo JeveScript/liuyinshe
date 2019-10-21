@@ -26,6 +26,10 @@ class basicModel {
     return knex(this.table).where(params).select();
   }
 
+  ArrDelete(params) {
+    return knex(this.table).where(params).del()
+  }
+
   update(id,params) {
     return knex(this.table).where('id', '=', id).update(params);
   }
