@@ -1,6 +1,5 @@
 node_modules/
 config.js
-utils/authCode.js
 
 .DS_Store
 npm-debug.log*

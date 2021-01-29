@@ -73,7 +73,6 @@ const classControllers = {
       const teacher_id = req.params.teacher_id;
       console.log(start_at, teacher_id)
       if(!start_at) return res.json({code:0, message:'数据不对,请重新填写'})
-      console.log()
       const classData = await classModel.where({start_at})
       if(!classData.length) return res.json({code:0, message:'日期课程暂未开启,请重新填写'})
       const teacherData = await teacherModel.where({id:teacher_id})
